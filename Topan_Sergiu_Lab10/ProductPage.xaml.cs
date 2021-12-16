@@ -16,6 +16,7 @@ namespace Topan_Sergiu_Lab10
         InitializeComponent();
         sl = slist;
     }
+
     public partial class ProductPage : ContentPage
     {
         public ProductPage()
@@ -41,4 +42,23 @@ namespace Topan_Sergiu_Lab10
         base.OnAppearing();
         listView.ItemsSource = await App.Database.GetProductsAsync();
     }
-}
+
+    async void OnListViewItemSelected(object sender, SelectedItemChangedEventArgs e)
+    {
+
+        Product p;
+        if (e.SelectedItem != null)
+        {
+            p = e.SelectedItem as Product;
+            var lp = new ListProduct()
+            {
+                ShopListID = sl.ID,
+                ProductID = p.ID
+            };
+            await App.Database.SaveListProductAsync(lp);
+            p.ListProducts = new List<ListProduct> { lp };
+
+            await Navigation.PopAsync();
+        }
+    }
+    }
